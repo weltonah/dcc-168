@@ -6,10 +6,12 @@ public class testeFor {
 			a=a+i;
 		int b=9;
 		
-		for(int j = 0; j <10;j++)
-			for(int k=j-1; k < 15;k++)
-				a=k-j;
-		
+		for(int j = 0; j <10;j++) {
+			a = a+1;
+			for(int k=j-1; k < 15;k++) {
+				
+			}
+		}
 		System.out.println(a);
 	}
 }

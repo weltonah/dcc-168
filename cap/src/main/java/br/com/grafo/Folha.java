@@ -25,7 +25,9 @@ public class Folha {
 	public void setFilhos(ArrayList<Folha> filhos) {
 		this.filhos = filhos;
 	}
-	
+	public void deletar(Folha e) {
+		filhos.remove(e);
+	}
 	public void addFolha(Folha folha) {
 		filhos.add(folha);
 	}
