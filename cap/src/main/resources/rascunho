@@ -1,0 +1,28 @@
+e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra,folhaFlag);
+
+While
+	folhaFlag = "while"
+	f3 = no While
+for
+	folhaFlag = "for"
+	f3 = no For
+IF
+	folhaFlag = if 1
+	f3 = if;
+	
+	folhaFlag = if 2
+	gra.(cont-1) = Pos if2
+	
+Variavel
+//	folhaFlag = Break
+//	gra.(cont-1) = break
+	
+	folhaFlag = return
+	
+	folhaFlag = variavel nova
+	gra.(cont-1) = variavel
+	
+	folhaFlag = variavel pai
+	f3 = variavel
+null
+	folhaFlag = null

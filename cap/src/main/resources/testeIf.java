@@ -24,6 +24,23 @@ public class testeIf {
 		    c=c-1;
 		}
 		
+		
+		if(a==0) {
+			if(b>32) {
+				if(c<7) {
+					a = 60 - b;
+				}
+			}
+		}
+		if(a==0) {
+			if(b>32) {
+				if(c<7) {
+					a = 60 - b;
+				}else {
+					a = a +a;
+				}
+			}
+		}
 		System.out.println(a);
 	}
 }

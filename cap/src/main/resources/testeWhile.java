@@ -8,7 +8,6 @@ public class testeWhile {
 			i++;
 		}
 		int b=9;
-		
 		int j = 0;
 		while(j <10) {
 			a=a+i;
@@ -18,6 +17,7 @@ public class testeWhile {
 			}
 			j++;
 		}
+
 		
 		System.out.println(a);
 	}

@@ -50,5 +50,8 @@ public class Grafo {
 	public ArrayList<Folha> GetHashMap(){
 		return listaFolhas;
 	}
+	public int buscaFolha(Folha e) {
+		return listaFolhas.indexOf(e);
+	}
 }
 
