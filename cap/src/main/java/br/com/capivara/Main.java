@@ -13,4 +13,5 @@ public class Main {
 		if(code.startsWith("for"))
 			System.out.println("deu certp");
 	}
+	
 }

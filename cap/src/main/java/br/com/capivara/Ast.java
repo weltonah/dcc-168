@@ -16,7 +16,8 @@ import br.com.grafo.Grafo;
 
 public class Ast {
 	private CompilationUnit ast;
-	//Cria a AST
+
+	// Cria a AST
 	public Ast(String caminho) {
 		FileInputStream in;
 		try {
@@ -27,7 +28,8 @@ public class Ast {
 			Logger.getLogger(Ast.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	//Cria o Grafo e preenche o NO Raiz
+
+	// Cria o Grafo e preenche o NO Raiz
 	public Grafo criarGrafo() {
 		Grafo gra = null;
 		List<Node> listnoUm = ast.getChildNodes().get(0).getChildNodes().get(1).getChildNodes();
@@ -46,15 +48,19 @@ public class Ast {
 
 		return gra;
 	}
-	//Inicia a Busca
+
+	// Inicia a Busca
 	public void BuscaProfundidade(List<Node> list, Folha pai, Grafo gra) {
 		Folha foo = new Folha();
 		foo.setTexto("variavel");
 		ExplorarBusca(list, pai, gra, foo);
-		gra.getFolha(gra.getCont() - 1).addFolha(gra.getFim());
+		if(!foo.getTexto().startsWith("return")) {
+			gra.getFolha(gra.getCont() - 1).addFolha(gra.getFim());
+		}
 		imprimirGrafo(gra);
 	}
-	//Busca de profundidade
+
+	// Busca de profundidade
 	public Folha ExplorarBusca(List<Node> list, Folha pai, Grafo gra, Folha Ultimovalor) {
 		Folha f = null;
 		boolean flag = false;
@@ -70,12 +76,27 @@ public class Ast {
 					&& !node.toString().startsWith("while")) {
 				f.setTexto(node.toString());
 				if (node.toString().startsWith("return")) {
-					f.setTexto(node.toString());
-					gra.addlista(f);
-					pai.addFolha(f);
-					f.addFolha(gra.getFim());
-					Ultimovalor.setTexto("return");
-					return null;
+					if (list.size() == 1) {
+						pai.setTexto(node.toString());
+						pai.addFolha(gra.getFim());
+						Ultimovalor.setTexto("return");
+						return pai;
+					} else {
+						if(Ultimovalor.getTexto().contentEquals("variavel")) {
+							pai.addFolha(f);
+							f.setTexto(node.toString());
+							f.addFolha(gra.getFim());
+							gra.addlista(f);
+							Ultimovalor.setTexto("return");
+							return pai;
+						}else {
+							pai.setTexto(node.toString());
+							pai.addFolha(gra.getFim());
+							Ultimovalor.setTexto("return");
+							return pai;
+						}
+						
+					}
 				} else {
 					if (!flag) {
 						pai.addMetodosInternos(f);
@@ -123,6 +144,9 @@ public class Ast {
 						if (folhaFlag.getTexto() == null) {
 							f1.addFolha(f4);
 						} else {
+							if (folhaFlag.getTexto().contentEquals("return")) {
+
+							}
 							if (folhaFlag.getTexto().contentEquals("while")) {
 								if (e1.getTexto().contentEquals("vazio")) {
 									for (Folha no : BuscarPai(gra, e1)) {
@@ -467,7 +491,6 @@ public class Ast {
 											}
 										}
 									}
-
 								}
 							}
 							Folha f4 = new Folha();
@@ -482,12 +505,12 @@ public class Ast {
 				}
 				flag = true;
 				flagRetorno = false;
-				System.out.println("Fim de Ciclo");
 			}
 		}
 		return f;
 	}
-	//Busca todos os Pais de um determinado NO
+
+	// Busca todos os Pais de um determinado NO
 	public ArrayList<Folha> BuscarPai(Grafo gra, Folha e) {
 		ArrayList<Folha> result = new ArrayList<Folha>();
 		for (Folha folhaaux : gra.GetHashMap()) {
@@ -499,7 +522,8 @@ public class Ast {
 		}
 		return result;
 	}
-	//Imprime o Grafo
+
+	// Imprime o Grafo
 	public void imprimirGrafo(Grafo gra) {
 		for (Folha folhaaux : gra.GetHashMap()) {
 			System.out.println(folhaaux.getTexto() + "####");
@@ -511,6 +535,7 @@ public class Ast {
 			}
 		}
 	}
+
 	// Preenche o IF
 	public void AddIf(List<Node> list, Folha pai) {
 		pai.setTexto("if(" + list.get(0).toString() + ")");
@@ -518,14 +543,16 @@ public class Ast {
 		e.setTexto(list.get(0).toString());
 		pai.addMetodosInternos(e);
 	}
-	//Preenche o While
+
+	// Preenche o While
 	public void AddWhile(List<Node> list, Folha pai) {
 		pai.setTexto("while(" + list.get(0).toString() + ")");
 		Folha e = new Folha();
 		e.setTexto(list.get(0).toString());
 		pai.addMetodosInternos(e);
 	}
-	//Preenche o For
+
+	// Preenche o For
 	public void AddFor(List<Node> list, Folha pai) {
 		pai.setTexto("for(" + list.get(1).toString() + ")");
 		Folha e = new Folha();
