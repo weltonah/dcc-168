@@ -17,7 +17,13 @@ public class testeWhile {
 			}
 			j++;
 		}
-
+		
+		while(b <10) {
+			b=b+i;
+			int k =0;
+			while(b<15) {
+			}
+		}
 		
 		System.out.println(a);
 	}

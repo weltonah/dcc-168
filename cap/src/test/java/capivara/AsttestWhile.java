@@ -11,7 +11,7 @@ import br.com.grafo.Grafo;
 
 public class AsttestWhile {
 
-	final static String root = "/home/welton/WorkspaceJAVA/trabalho Teste de Soft/cap/src/main/resources/";
+	final static String root = System.getProperty("user.dir")+"/src/main/resources/";
 	private static Ast ast;
 	private static Grafo graf;
 	@BeforeClass
@@ -91,7 +91,23 @@ public class AsttestWhile {
 	}
 	@Test
 	public void no9() {
-		assertEquals("System.out.println(a);",graf.getFolha(9).getTexto());
+		assertEquals("while(b < 10)",graf.getFolha(9).getTexto());
+	}
+	@Test
+	public void no10() {
+		assertEquals("b = b + i;",graf.getFolha(10).getTexto());
+	}
+	@Test
+	public void no11() {
+		assertEquals("while(b < 15)",graf.getFolha(11).getTexto());
+	}
+	@Test
+	public void no12() {
+		assertEquals(null,graf.getFolha(12).getTexto());
+	}
+	@Test
+	public void no13() {
+		assertEquals("System.out.println(a);",graf.getFolha(13).getTexto());
 	}
 	
 }

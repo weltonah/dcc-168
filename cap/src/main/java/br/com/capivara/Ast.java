@@ -55,6 +55,7 @@ public class Ast {
 
 	public void BuscaProfundidade(List<Node> list, Folha pai, Grafo gra) {
 		Folha foo = new Folha();
+		foo.setTexto("variavel");
 		ExplorarBusca(list, pai, gra, foo);
 		gra.getFolha(gra.getCont() - 1).addFolha(gra.getFim());
 
@@ -142,45 +143,46 @@ public class Ast {
 		Folha f = null;
 		boolean flag = false;
 		boolean flagRetorno = false;
-		// for (Node nod : list)
-		// System.out.println(nod.toString() + " Filhos");
-		for (Folha folhaaux : gra.GetHashMap()) {
-			System.out.println(folhaaux.getTexto() + "####");
-			for (Folha folhaaux2 : folhaaux.getFilhos()) {
-				System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
-			}
-			for (Folha folhaaux2 : folhaaux.getMetodosInternos()) {
-				System.out.println(folhaaux2.getTexto() + " INTERNOS");
-			}
-		}
+
+		for (Node nod : list)
+			System.out.println(nod.toString() + " Filhos");
+		// for (Folha folhaaux : gra.GetHashMap()) {
+		// System.out.println(folhaaux.getTexto() + "####");
+		// for (Folha folhaaux2 : folhaaux.getFilhos()) {
+		// System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
+		// }
+		// for (Folha folhaaux2 : folhaaux.getMetodosInternos()) {
+		// System.out.println(folhaaux2.getTexto() + " INTERNOS");
+		// }
+		// }
 		for (int i = 0; i < list.size(); i++) {
-			// for (Folha folhaaux : gra.GetHashMap()) {
-			// System.out.println(folhaaux.getTexto() + "####");
-			// for (Folha folhaaux2 : folhaaux.getFilhos()) {
-			// System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
-			// }
-			// for (Folha folhaaux2 : folhaaux.getMetodosInternos()) {
-			// System.out.println(folhaaux2.getTexto() + " INTERNOS");
-			// }
-			// }
+//			for (Folha folhaaux : gra.GetHashMap()) {
+//				System.out.println(folhaaux.getTexto() + "####");
+//				for (Folha folhaaux2 : folhaaux.getFilhos()) {
+//					System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
+//				}
+//				for (Folha folhaaux2 : folhaaux.getMetodosInternos()) {
+//					System.out.println(folhaaux2.getTexto() + " INTERNOS");
+//				}
+//			}
 			if (flagRetorno)
 				f = null;
 			if (f == null)
 				f = new Folha();
 			Node node = list.get(i);
-			if (!node.toString().contains("if") && !node.toString().contains("for")
-					&& !node.toString().contains("while")) {
+			if (!node.toString().startsWith("if") && !node.toString().startsWith("for")
+					&& !node.toString().startsWith("while")) {
 				f.setTexto(node.toString());
 				System.out.println(node.toString() + " variavel");
-				 if (node.toString().contains("return ")) {
-					 Folha rert = new Folha();
-					 gra.addlista(rert);
-					 pai.addFolha(rert);
-					 rert.addFolha(gra.getFim());
-					 System.out.println(" return ");
-					 Ultimovalor.setTexto("return");
-					 return null;
-				 }
+				if (node.toString().contains("return ")) {
+					Folha rert = new Folha();
+					gra.addlista(rert);
+					pai.addFolha(rert);
+					rert.addFolha(gra.getFim());
+					System.out.println(" return ");
+					Ultimovalor.setTexto("return");
+					return null;
+				}
 				if (!flag) {
 					pai.addMetodosInternos(f);
 					if (pai.getTexto() == null) {
@@ -202,16 +204,20 @@ public class Ast {
 
 			} else {
 				Folha e1 = null, e2 = null;
-				if (node.toString().contains("if")) {
-					
-					 for (Node nod : node.getChildNodes())
-					 System.out.println("******* "+nod.toString() + " IF");
-					 
-					 
-					if (!pai.equals(f)) {
-						pai.addFolha(f);
-						gra.addlista(f);
+				if (node.toString().startsWith("if")) {
+
+					for (Node nod : node.getChildNodes())
+						System.out.println("******* " + nod.toString() + " IF");
+					if (Ultimovalor.getTexto() == null) {
+						f = pai;
+					} else {
+						if (Ultimovalor.getTexto().contentEquals("variavel")) {
+							pai.addFolha(f);
+							gra.addlista(f);
+						} else {
+						}
 					}
+
 					AddIf(node.getChildNodes(), f);
 					Folha folhaFlag = new Folha();
 					Folha folhaFlag2 = new Folha();
@@ -224,47 +230,116 @@ public class Ast {
 						gra.addlista(f1);
 						f.addFolha(f2);
 						gra.addlista(f2);
-						if(node.getChildNodes().get(1).getChildNodes().size() !=0)
-						e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f1, gra, folhaFlag);
+						if (node.getChildNodes().get(1).getChildNodes().size() != 0)
+							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f1, gra, folhaFlag);
 						Folha f4 = new Folha();
-						if (folhaFlag.getTexto() == null)
+						if (folhaFlag.getTexto() == null) {
 							f1.addFolha(f4);
+						} else {
+							if (folhaFlag.getTexto().contentEquals("while")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("for")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("variavel"))
+								gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+							
+							if (folhaFlag.getTexto().contentEquals("if 1")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("if 2")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+						}
+						if (node.getChildNodes().get(2).getChildNodes().size() != 0)
+							e2 = ExplorarBusca(node.getChildNodes().get(2).getChildNodes(), f2, gra, folhaFlag2);
 
-						if (folhaFlag.getTexto().contentEquals("while"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("for"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("variavel"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("if 1"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("if 2"))
-							gra.getFolha(gra.getCont() - 1).addFolha(f4);
-						if(node.getChildNodes().get(2).getChildNodes().size() !=0)
-						e2 = ExplorarBusca(node.getChildNodes().get(2).getChildNodes(), f2, gra, folhaFlag2);
-
-						if (folhaFlag2.getTexto() == null)
+						if (folhaFlag2.getTexto() == null) {
 							f2.addFolha(f4);
-
-						if (folhaFlag2.getTexto().contentEquals("while"))
-							gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-
-						if (folhaFlag2.getTexto().contentEquals("for"))
-							gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-
-						if (folhaFlag2.getTexto().contentEquals("variavel"))
-							gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-
-						if (folhaFlag2.getTexto().contentEquals("if 1"))
-							gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-
-						if (folhaFlag2.getTexto().contentEquals("if 2"))
-							gra.getFolha(gra.getCont() - 1).addFolha(f4);
+						} else {
+							if (folhaFlag2.getTexto().contentEquals("while")) {
+								if (e2.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e2)) {
+										no.addFolha(f4);
+										no.deletar(e2);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+								}
+							}
+							if (folhaFlag2.getTexto().contentEquals("for")) {
+								if (e2.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e2)) {
+										no.addFolha(f4);
+										no.deletar(e2);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+								}
+							}
+							if (folhaFlag2.getTexto().contentEquals("variavel"))
+								gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+							
+							if (folhaFlag2.getTexto().contentEquals("if 1")) {
+								if (e2.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e2)) {
+										no.addFolha(f4);
+										no.deletar(e2);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+								}
+							}
+							if (folhaFlag2.getTexto().contentEquals("if 2")) {
+								if (e2.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e2)) {
+										no.addFolha(f4);
+										no.deletar(e2);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+								}
+							}
+						}
 						Ultimovalor.setTexto("if 2");
+						f4.setTexto("vazio");
 						gra.addlista(f4);
 						f = f4;
 						pai = f;
@@ -272,153 +347,291 @@ public class Ast {
 						Folha f3 = new Folha();
 						f.addFolha(f3);
 						gra.addlista(f3);
-						if(node.getChildNodes().get(1).getChildNodes().size() !=0)
-						e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag);
+						if (node.getChildNodes().get(1).getChildNodes().size() != 0)
+							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag);
 						Folha f4 = new Folha();
 						System.out.println(folhaFlag.getTexto() + "GIRA VENDO");
 
-						if (folhaFlag.getTexto() == null)
+						if (folhaFlag.getTexto() == null) {
 							f3.addFolha(f4);
-						
-						if (folhaFlag.getTexto().contentEquals("while"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+						} else {
+							if (folhaFlag.getTexto().contentEquals("while")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("for")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("variavel"))
+								gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
 
-						if (folhaFlag.getTexto().contentEquals("for"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("variavel"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("if 1"))
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-						if (folhaFlag.getTexto().contentEquals("if 2"))
-							gra.getFolha(gra.getCont() - 1).addFolha(f4);
+							if (folhaFlag.getTexto().contentEquals("if 1")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("if 2")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f4);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+								}
+							}
+						}
+						f4.setTexto("vazio");
 						f.addFolha(f4);
 						Ultimovalor.setTexto("if 1");
 						gra.addlista(f4);
 						f = f4;
 						pai = f;
+
 					}
-				}
-				if (node.toString().contains("while")) {
-					if (!pai.equals(f)) {
-						pai.addFolha(f);
-						gra.addlista(f);
-					}
-					AddWhile(node.getChildNodes(), f);
-					Folha f3 = new Folha();
-					f.addFolha(f3);
-					gra.addlista(f3);
-					Folha folhaFlag = new Folha();
-					if(node.getChildNodes().get(1).getChildNodes().size() !=0)
-					e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag);
-
-					if (folhaFlag.getTexto() == null)
-						f3.addFolha(f);
-					if (folhaFlag.getTexto().contentEquals("while"))
-						gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-
-					if (folhaFlag.getTexto().contentEquals("for"))
-						gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-
-					if (folhaFlag.getTexto().contentEquals("variavel"))
-						gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-
-					if (folhaFlag.getTexto().contentEquals("if 1"))
-						gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-
-					if (folhaFlag.getTexto().contentEquals("if 2"))
-						gra.getFolha(gra.getCont() - 1).addFolha(f);
-
-					Ultimovalor.setTexto("while");
-
-					Folha f4 = new Folha();
-					f.addFolha(f4);
-					gra.addlista(f4);
-					pai = f4;
-					f = f4;
-
-				}
-
-				if (node.toString().contains("for")) {
-					// for (Node nod : node.getChildNodes())
-					// System.out.println(nod.toString() + " For");
-
-					System.out.println(gra.getCont() + "----------");
-					System.out.println("No unico");
-
-					Folha DeclaracaoVariavel = new Folha();
-					DeclaracaoVariavel.setTexto(node.getChildNodes().get(0).toString());
-					// veio de variavel
-					if (!pai.equals(f)) {
-						if (pai.getTexto() == null)
-							pai.setTexto(node.getChildNodes().get(0).toString());
-						pai.addMetodosInternos(DeclaracaoVariavel);
-						pai.addFolha(f);
-						gra.addlista(f);
-						// veio de for, while ou if
-					} else {
-						pai.addMetodosInternos(DeclaracaoVariavel);
-						Folha f8 = new Folha();
-						f = f8;
-						pai.addFolha(f);
-						gra.addlista(f);
-					}
-					AddFor(node.getChildNodes(), f);
-
-					Folha DeclaracaoIncremento = new Folha();
-					DeclaracaoIncremento.setTexto(node.getChildNodes().get(2).toString());
-					// DeclaracaoIncremento.addFolha(f);
-
-					Folha DeclaracaoInterna = new Folha();
-					f.addFolha(DeclaracaoInterna);
-					gra.addlista(DeclaracaoInterna);
-
-					System.out.println(f.getTexto() + " +++++++++++++++++++++");
-					Folha folhaFlag = new Folha();
-					if(node.getChildNodes().get(3).getChildNodes().size() !=0)
-					e1 = ExplorarBusca(node.getChildNodes().get(3).getChildNodes(), DeclaracaoInterna, gra, folhaFlag);
-					System.out.println(DeclaracaoInterna.getTexto() + " +++++++++++++++++++$$");
-
-					if (folhaFlag.getTexto() == null) {
-						f.deletar(DeclaracaoInterna);
-						gra.deletar(DeclaracaoInterna);
-						f.addFolha(DeclaracaoIncremento);
-						gra.addlista(DeclaracaoIncremento);
-						DeclaracaoIncremento.addFolha(f);
-					} else {
-						if (folhaFlag.getTexto().contentEquals("while") || folhaFlag.getTexto().contentEquals("for")) {
-							gra.getFolha(gra.buscaFolha(e1)).addFolha(DeclaracaoIncremento);
-							gra.addlista(DeclaracaoIncremento);
-							DeclaracaoIncremento.addFolha(f);
+				} else {
+					if (node.toString().startsWith("while")) {
+						// veio de variavel
+						if (Ultimovalor.getTexto() == null) {
+							f = pai;
 						} else {
-							if (folhaFlag.getTexto().contentEquals("variavel")
-									|| folhaFlag.getTexto().contentEquals("variavel pai")) {
-								gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
-								gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-							} else {
-								if (folhaFlag.getTexto().contentEquals("if 2")) {
-									gra.getFolha(gra.getCont() - 1).setTexto(DeclaracaoIncremento.getTexto());
-									gra.getFolha(gra.getCont() - 1).addMetodosInternos(DeclaracaoIncremento);
-									gra.getFolha(gra.getCont() - 1).addFolha(f);
-								}
+							if (Ultimovalor.getTexto().contentEquals("variavel")) {
+								pai.addFolha(f);
+								gra.addlista(f);
+							}
+						}
+						// veio de for, while ou if
 
-								if (folhaFlag.getTexto().contentEquals("if 1")) {
-									gra.getFolha(gra.buscaFolha(e1)).setTexto(DeclaracaoIncremento.getTexto());
-									gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
+						AddWhile(node.getChildNodes(), f);
+						Folha f3 = new Folha();
+						f.addFolha(f3);
+						gra.addlista(f3);
+						Folha folhaFlag = new Folha();
+						if (node.getChildNodes().get(1).getChildNodes().size() != 0)
+							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag);
+
+						if (folhaFlag.getTexto() == null) {
+							f3.addFolha(f);
+						} else {
+							if (folhaFlag.getTexto().contentEquals("while")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
 									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
 								}
 							}
+							if (folhaFlag.getTexto().contentEquals("for")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("variavel"))
+								gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
 
+							if (folhaFlag.getTexto().contentEquals("if 1")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+								}
+							}
+							if (folhaFlag.getTexto().contentEquals("if 2")) {
+								if (e1.getTexto().contentEquals("vazio")) {
+									for (Folha no : BuscarPai(gra, e1)) {
+										no.addFolha(f);
+										no.deletar(e1);
+									}
+									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								} else {
+									gra.getFolha(gra.getCont() - 1).addFolha(f);
+								}
+							}
+						}
+						Ultimovalor.setTexto("while");
+						Folha f4 = new Folha();
+						f4.setTexto("vazio");
+						f.addFolha(f4);
+						gra.addlista(f4);
+						pai = f4;
+						f = f4;
+
+					} else {
+						if (node.toString().startsWith("for")) {
+							for (Node nod : node.getChildNodes())
+								System.out.println(nod.toString() + " For");
+
+							System.out.println(gra.getCont() + "----------");
+							System.out.println("No unico");
+
+							Folha DeclaracaoVariavel = new Folha();
+							DeclaracaoVariavel.setTexto(node.getChildNodes().get(0).toString());
+
+							if (Ultimovalor.getTexto() == null) {
+								pai.setTexto(node.getChildNodes().get(0).toString());
+								pai.addMetodosInternos(DeclaracaoVariavel);
+								Folha f8 = new Folha();
+								f = f8;
+								pai.addFolha(f);
+								gra.addlista(f);
+							} else {
+								if (Ultimovalor.getTexto().contentEquals("variavel")) {
+									pai.addMetodosInternos(DeclaracaoVariavel);
+									pai.addFolha(f);
+									gra.addlista(f);
+								} else {
+									pai.setTexto(node.getChildNodes().get(0).toString());
+									pai.addMetodosInternos(DeclaracaoVariavel);
+									Folha f8 = new Folha();
+									f = f8;
+									pai.addFolha(f);
+									gra.addlista(f);
+								}
+							}
+							AddFor(node.getChildNodes(), f);
+
+							Folha DeclaracaoIncremento = new Folha();
+							DeclaracaoIncremento.setTexto(node.getChildNodes().get(2).toString());
+							// DeclaracaoIncremento.addFolha(f);
+
+							Folha DeclaracaoInterna = new Folha();
+							f.addFolha(DeclaracaoInterna);
+							gra.addlista(DeclaracaoInterna);
+
+							System.out.println(f.getTexto() + " +++++++++++++++++++++");
+							Folha folhaFlag = new Folha();
+							if (node.getChildNodes().get(3).getChildNodes().size() != 0)
+								e1 = ExplorarBusca(node.getChildNodes().get(3).getChildNodes(), DeclaracaoInterna, gra,
+										folhaFlag);
+							System.out.println(DeclaracaoInterna.getTexto() + " +++++++++++++++++++$$");
+
+							if (folhaFlag.getTexto() == null) {
+								f.deletar(DeclaracaoInterna);
+								gra.deletar(DeclaracaoInterna);
+								f.addFolha(DeclaracaoIncremento);
+								gra.addlista(DeclaracaoIncremento);
+								DeclaracaoIncremento.addFolha(f);
+							} else {
+								if (folhaFlag.getTexto().contentEquals("while")
+										|| folhaFlag.getTexto().contentEquals("for")) {
+									if (e1.getTexto().contentEquals("vazio")) {
+										gra.getFolha(gra.buscaFolha(e1)).setTexto(DeclaracaoIncremento.getTexto());
+										gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+									} else {
+										gra.getFolha(gra.buscaFolha(e1)).addFolha(DeclaracaoIncremento);
+										gra.addlista(DeclaracaoIncremento);
+										DeclaracaoIncremento.addFolha(f);
+									}
+								} else {
+									if (folhaFlag.getTexto().contentEquals("variavel")
+											|| folhaFlag.getTexto().contentEquals("variavel pai")) {
+										gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
+										gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+									} else {
+										if (folhaFlag.getTexto().contentEquals("if 2")) {
+											
+											if (e1.getTexto().contentEquals("vazio")) {
+												imprimirGrafo(gra);
+												System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+												System.out.println(e1.getTexto() +"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+												
+												for (Folha no : BuscarPai(gra, e1)) {
+													no.deletar(e1);
+													no.addFolha(DeclaracaoIncremento);
+													System.out.println(no.getTexto());
+												}
+												gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+												DeclaracaoIncremento.addFolha(f);
+												
+												gra.addlista(DeclaracaoIncremento);
+												imprimirGrafo(gra);
+//												gra.getFolha(gra.getCont() - 1)
+//														.setTexto(DeclaracaoIncremento.getTexto());
+//												gra.getFolha(gra.getCont() - 1).addFolha(f);
+											} else {
+												gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
+												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+//												gra.getFolha(gra.getCont() - 1)
+//														.setTexto(DeclaracaoIncremento.getTexto());
+//												gra.getFolha(gra.getCont() - 1)
+//														.addMetodosInternos(DeclaracaoIncremento);
+//												gra.getFolha(gra.getCont() - 1).addFolha(f);
+											}
+										}
+										if (folhaFlag.getTexto().contentEquals("if 1")) {
+											if (e1.getTexto().contentEquals("vazio")) {
+												DeclaracaoIncremento.addMetodosInternos(DeclaracaoIncremento);
+												for (Folha no : BuscarPai(gra, e1)) {
+													no.addFolha(DeclaracaoIncremento);
+													no.deletar(e1);
+												}
+												gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+												DeclaracaoIncremento.addFolha(f);
+												gra.addlista(DeclaracaoIncremento);
+												
+												
+//												gra.getFolha(gra.buscaFolha(e1))
+//														.setTexto(DeclaracaoIncremento.getTexto());
+//												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+												
+											} else {
+												gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
+												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+//												gra.getFolha(gra.buscaFolha(e1))
+//														.setTexto(DeclaracaoIncremento.getTexto());
+//												gra.getFolha(gra.buscaFolha(e1))
+//														.addMetodosInternos(DeclaracaoIncremento);
+//												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+											}
+										}
+									}
+
+								}
+							}
+							Folha f4 = new Folha();
+							f4.setTexto("vazio");
+							f.addFolha(f4);
+							gra.addlista(f4);
+							pai = f4;
+							f = f4;
+							Ultimovalor.setTexto("for");
 						}
 					}
-					Folha f4 = new Folha();
-					f.addFolha(f4);
-					gra.addlista(f4);
-					pai = f4;
-					f = f4;
-					Ultimovalor.setTexto("for");
 				}
 				flag = true;
 				flagRetorno = false;
@@ -429,28 +642,31 @@ public class Ast {
 
 	}
 
-	public Folha NumeroPais(Grafo gra, Folha e) {
-		int cont = 0;
-		Folha f2 = null;
-		if (!e.getTexto().contains("if") && !e.getTexto().contains("for") && !e.getTexto().contains("while")) {
-			for (Folha f : gra.GetHashMap()) {
-				if ((!f.equals(e)) && (!f.getTexto().contains("if") && !f.getTexto().contains("for")
-						&& !f.getTexto().contains("while"))) {
-					for (Folha f1 : f.getFilhos()) {
-						if (f1.equals(e)) {
-							cont++;
-							f2 = f;
-						}
-					}
+	public ArrayList<Folha> BuscarPai(Grafo gra, Folha e) {
+
+		System.out.println(e.getTexto() + "@@@@@@@@@@@@@@@@@@@@");
+		ArrayList<Folha> result = new ArrayList<Folha>();
+		for (Folha folhaaux : gra.GetHashMap()) {
+			for (Folha folhaaux2 : folhaaux.getFilhos()) {
+				if (folhaaux2.equals(e)) {
+					result.add(folhaaux);
 				}
-				if (cont > 1)
-					break;
 			}
 		}
-		if (cont > 1)
-			return null;
-		else
-			return f2;
+		System.out.println(result.size() + "@@@@@@@@@@@@@@@@@@@@");
+		return result;
+	}
+
+	public void imprimirGrafo(Grafo gra) {
+		for (Folha folhaaux : gra.GetHashMap()) {
+			System.out.println(folhaaux.getTexto() + "####");
+			for (Folha folhaaux2 : folhaaux.getFilhos()) {
+				System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
+			}
+			for (Folha folhaaux2 : folhaaux.getMetodosInternos()) {
+				System.out.println(folhaaux2.getTexto() + " INTERNOS");
+			}
+		}
 	}
 
 	public void AddIf(List<Node> list, Folha pai) {

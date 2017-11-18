@@ -2,6 +2,7 @@
 public class testeIf {
 	
 	public static void main(String[] args) {
+		
 		int a = 9;
 		if (a > 9) {
 			a = 100;
@@ -32,10 +33,10 @@ public class testeIf {
 				}
 			}
 		}
-		if(a==0) {
-			if(b>32) {
-				if(c<7) {
-					a = 60 - b;
+		if(a==55) {
+			if(b<10) {
+				if(c>=4) {
+					a = 60 - c;
 				}else {
 					a = a +a;
 				}

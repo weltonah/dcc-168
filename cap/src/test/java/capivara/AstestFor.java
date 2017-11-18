@@ -12,7 +12,7 @@ import br.com.grafo.Grafo;
 public class AstestFor {
 
 
-	final static String root = "/home/welton/WorkspaceJAVA/trabalho Teste de Soft/cap/src/main/resources/";
+	final static String root = System.getProperty("user.dir")+"/src/main/resources/";
 	private static Ast ast;
 	private static Grafo graf;
 	@BeforeClass
@@ -52,7 +52,7 @@ public class AstestFor {
 //	}
 	@Test
 	public void no3() {
-		assertEquals("i++",graf.getFolha(3).getTexto());
+		assertEquals("int b = 9;",graf.getFolha(3).getTexto());
 	}
 //	@Test
 //	public void no1Parano3() {
@@ -60,7 +60,7 @@ public class AstestFor {
 //	}
 	@Test
 	public void no4() {
-		assertEquals("int b = 9;",graf.getFolha(4).getTexto());
+		assertEquals("for(j < 10)",graf.getFolha(4).getTexto());
 	}
 //	@Test
 //	public void no8ParaNo4() {
@@ -68,35 +68,35 @@ public class AstestFor {
 //	}
 	@Test
 	public void no5() {
-		assertEquals("for(j < 10)",graf.getFolha(5).getTexto());
+		assertEquals("a = a + 1;",graf.getFolha(5).getTexto());
 	}
 	@Test
 	public void no6() {
-		assertEquals("a = a + 1;",graf.getFolha(6).getTexto());
+		assertEquals("for(k < 15)",graf.getFolha(6).getTexto());
 	}
 	@Test
 	public void no7() {
-		assertEquals("for(k < 15)",graf.getFolha(7).getTexto());
+		assertEquals("k++",graf.getFolha(7).getTexto());
 	}
 	@Test
 	public void no8() {
-		assertEquals("k++",graf.getFolha(8).getTexto());
+		assertEquals("j++",graf.getFolha(8).getTexto());
 	}
-	@Test
-	public void no6Parano7() {
-		assertEquals("k++;",graf.getFolha(6).getFilhos().get(0).getTexto());
-	}
+//	@Test
+//	public void no6Parano7() {
+//		assertEquals("k++;",graf.getFolha(6).getFilhos().get(0).getTexto());
+//	}
 	@Test
 	public void no9() {
-		assertEquals("j++",graf.getFolha(9).getTexto());
+		assertEquals("System.out.println(a);",graf.getFolha(9).getTexto());
 	}
 //	@Test
 //	public void no6Parano8() {
 //		assertEquals("j++;",graf.getFolha(6).getFilhos().get(1).getTexto());
 //	}
-	@Test
-	public void no10() {
-		assertEquals("System.out.println(a);",graf.getFolha(10).getTexto());
-	}
+//	@Test
+//	public void no10() {
+//		assertEquals("System.out.println(a);",graf.getFolha(10).getTexto());
+//	}
 
 }

@@ -8,14 +8,10 @@ public class testeTudo {
 		
 		if(a>35) {
 			if(b<88) {
-				if(c==100) {}
-			}
-		}
-		
-		if(a==0) {
-			if(b>32) {
-				if(c<7) {
-					a = 60 - b;
+				if(c==100) {
+					for(int t=0; t < 25; t++) {
+						
+					}
 				}
 			}
 		}			
@@ -26,7 +22,7 @@ public class testeTudo {
 				b = c-1;
 			}
 		}
-		for(int j = 0; j <88;j++) {
+		for(int k = 0; k <75;k++) {
 			if(b ==77) {
 				b = c;
 			}else {
