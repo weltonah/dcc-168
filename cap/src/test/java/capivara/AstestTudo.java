@@ -22,11 +22,11 @@ public class AstestTudo {
 	@Test
 	public void Nome() {
 		Folha raiz = graf.getRaiz();
-		assertEquals("void main (String[] args)",raiz.getTexto());
+		assertEquals("int testeTudoo (int ti,String bb)",raiz.getTexto());
 	}
 	@Test
 	public void no0() {
-		assertEquals("void main (String[] args)",graf.getFolha(0).getTexto());
+		assertEquals("int testeTudoo (int ti,String bb)",graf.getFolha(0).getTexto());
 	}
 	@Test
 	public void no1() {
@@ -128,5 +128,9 @@ public class AstestTudo {
 	@Test
 	public void no24() {
 		assertEquals("System.out.println(a);",graf.getFolha(24).getTexto());
+	}
+	@Test
+	public void no25() {
+		assertEquals("return ti;",graf.getFolha(25).getTexto());
 	}
 }

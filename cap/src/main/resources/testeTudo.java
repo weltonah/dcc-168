@@ -1,7 +1,7 @@
 
 
 public class testeTudo {
-	public static void main(String[] args) {
+	public int testeTudoo(int ti , String bb) {
 		for(int i = 0; i <10;i++)
 			System.out.println(i);
 		int a = 5; int b = 80; int c =777;
@@ -35,5 +35,6 @@ public class testeTudo {
 		}
 		
 		System.out.println(a);
+		return ti;
 	}
 }
