@@ -35,9 +35,11 @@ public class Ast {
 		List<Node> listnoUm = ast.getChildNodes().get(0).getChildNodes().get(1).getChildNodes();
 		Folha e = new Folha();
 		String titulo = listnoUm.get(listnoUm.size() - 2) + " " + listnoUm.get(0) + " (";
-		titulo = titulo + listnoUm.get(1);
-		for (int i = 2; i < listnoUm.size() - 2; i++) {
-			titulo = titulo + "," + listnoUm.get(i);
+		if (listnoUm.size() > 3) {
+			titulo = titulo + listnoUm.get(1);
+			for (int i = 2; i < listnoUm.size() - 2; i++) {
+				titulo = titulo + "," + listnoUm.get(i);
+			}
 		}
 		titulo = titulo + ")";
 		e.setTexto(titulo);
@@ -54,7 +56,7 @@ public class Ast {
 		Folha foo = new Folha();
 		foo.setTexto("variavel");
 		ExplorarBusca(list, pai, gra, foo);
-		if(!foo.getTexto().startsWith("return")) {
+		if (!foo.getTexto().startsWith("return")) {
 			gra.getFolha(gra.getCont() - 1).addFolha(gra.getFim());
 		}
 		imprimirGrafo(gra);
@@ -73,7 +75,7 @@ public class Ast {
 				f = new Folha();
 			Node node = list.get(i);
 			if (!node.toString().startsWith("if") && !node.toString().startsWith("for")
-					&& !node.toString().startsWith("while")) {
+					&& !node.toString().startsWith("while") && !node.toString().startsWith("switch")) {
 				f.setTexto(node.toString());
 				if (node.toString().startsWith("return")) {
 					if (list.size() == 1) {
@@ -82,20 +84,19 @@ public class Ast {
 						Ultimovalor.setTexto("return");
 						return pai;
 					} else {
-						if(Ultimovalor.getTexto().contentEquals("variavel")) {
+						if (Ultimovalor.getTexto().contentEquals("variavel")) {
 							pai.addFolha(f);
 							f.setTexto(node.toString());
 							f.addFolha(gra.getFim());
 							gra.addlista(f);
 							Ultimovalor.setTexto("return");
 							return pai;
-						}else {
+						} else {
 							pai.setTexto(node.toString());
 							pai.addFolha(gra.getFim());
 							Ultimovalor.setTexto("return");
 							return pai;
 						}
-						
 					}
 				} else {
 					if (!flag) {
@@ -144,46 +145,9 @@ public class Ast {
 						if (folhaFlag.getTexto() == null) {
 							f1.addFolha(f4);
 						} else {
-							if (folhaFlag.getTexto().contentEquals("return")) {
-
-							}
-							if (folhaFlag.getTexto().contentEquals("while")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("for")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("variavel"))
+							if (folhaFlag.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-
-							if (folhaFlag.getTexto().contentEquals("if 1")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("if 2")) {
+							} else {
 								if (e1.getTexto().contentEquals("vazio")) {
 									for (Folha no : BuscarPai(gra, e1)) {
 										no.addFolha(f4);
@@ -201,51 +165,21 @@ public class Ast {
 						if (folhaFlag2.getTexto() == null) {
 							f2.addFolha(f4);
 						} else {
-							if (folhaFlag2.getTexto().contentEquals("while")) {
-								if (e2.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e2)) {
-										no.addFolha(f4);
-										no.deletar(e2);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-								}
-							}
-							if (folhaFlag2.getTexto().contentEquals("for")) {
-								if (e2.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e2)) {
-										no.addFolha(f4);
-										no.deletar(e2);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-								}
-							}
-							if (folhaFlag2.getTexto().contentEquals("variavel"))
+							if (folhaFlag2.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+							} else {
+								if (folhaFlag.getTexto().contentEquals("return")) {
 
-							if (folhaFlag2.getTexto().contentEquals("if 1")) {
-								if (e2.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e2)) {
-										no.addFolha(f4);
-										no.deletar(e2);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
 								} else {
-									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-								}
-							}
-							if (folhaFlag2.getTexto().contentEquals("if 2")) {
-								if (e2.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e2)) {
-										no.addFolha(f4);
-										no.deletar(e2);
+									if (e2.getTexto().contentEquals("vazio")) {
+										for (Folha no : BuscarPai(gra, e2)) {
+											no.addFolha(f4);
+											no.deletar(e2);
+										}
+										gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
+									} else {
+										gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
 									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
 								}
 							}
 						}
@@ -265,53 +199,24 @@ public class Ast {
 						if (folhaFlag.getTexto() == null) {
 							f3.addFolha(f4);
 						} else {
-							if (folhaFlag.getTexto().contentEquals("while")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("for")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("variavel"))
+							if (folhaFlag.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+							} else {
+								if (folhaFlag.getTexto().contentEquals("return")) {
 
-							if (folhaFlag.getTexto().contentEquals("if 1")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
 								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+									if (e1.getTexto().contentEquals("vazio")) {
+										for (Folha no : BuscarPai(gra, e1)) {
+											no.addFolha(f4);
+											no.deletar(e1);
+										}
+										gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+									} else {
+										gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+									}
 								}
 							}
-							if (folhaFlag.getTexto().contentEquals("if 2")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-								}
-							}
+
 						}
 						f4.setTexto("vazio");
 						f.addFolha(f4);
@@ -342,51 +247,21 @@ public class Ast {
 						if (folhaFlag.getTexto() == null) {
 							f3.addFolha(f);
 						} else {
-							if (folhaFlag.getTexto().contentEquals("while")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("for")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("variavel"))
+							if (folhaFlag.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
+							} else {
+								if (folhaFlag.getTexto().contentEquals("return")) {
 
-							if (folhaFlag.getTexto().contentEquals("if 1")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
 								} else {
-									gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-								}
-							}
-							if (folhaFlag.getTexto().contentEquals("if 2")) {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f);
-										no.deletar(e1);
+									if (e1.getTexto().contentEquals("vazio")) {
+										for (Folha no : BuscarPai(gra, e1)) {
+											no.addFolha(f);
+											no.deletar(e1);
+										}
+										gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+									} else {
+										gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
 									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-								} else {
-									gra.getFolha(gra.getCont() - 1).addFolha(f);
 								}
 							}
 						}
@@ -457,9 +332,11 @@ public class Ast {
 										gra.getFolha(gra.buscaFolha(e1)).addMetodosInternos(DeclaracaoIncremento);
 										gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
 									} else {
-										if (folhaFlag.getTexto().contentEquals("if 2")) {
+										if (folhaFlag.getTexto().contentEquals("return")) {
 
+										} else {
 											if (e1.getTexto().contentEquals("vazio")) {
+
 												for (Folha no : BuscarPai(gra, e1)) {
 													no.deletar(e1);
 													no.addFolha(DeclaracaoIncremento);
@@ -474,22 +351,7 @@ public class Ast {
 												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
 											}
 										}
-										if (folhaFlag.getTexto().contentEquals("if 1")) {
-											if (e1.getTexto().contentEquals("vazio")) {
-												DeclaracaoIncremento.addMetodosInternos(DeclaracaoIncremento);
-												for (Folha no : BuscarPai(gra, e1)) {
-													no.addFolha(DeclaracaoIncremento);
-													no.deletar(e1);
-												}
-												gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
-												DeclaracaoIncremento.addFolha(f);
-												gra.addlista(DeclaracaoIncremento);
-											} else {
-												gra.getFolha(gra.buscaFolha(e1))
-														.addMetodosInternos(DeclaracaoIncremento);
-												gra.getFolha(gra.buscaFolha(e1)).addFolha(f);
-											}
-										}
+
 									}
 								}
 							}
@@ -500,6 +362,55 @@ public class Ast {
 							pai = f4;
 							f = f4;
 							Ultimovalor.setTexto("for");
+						} else {
+							if (node.toString().startsWith("switch")) {
+								for (Node n : node.getChildNodes())
+									System.out.println(n.toString() + " FILHOS SWITCH");
+								// veio de variavel
+								if (Ultimovalor.getTexto() == null) {
+									f = pai;
+								} else {
+									if (Ultimovalor.getTexto().contentEquals("variavel")) {
+										pai.addFolha(f);
+										gra.addlista(f);
+									}
+								}
+								AddSwitch(node.getChildNodes(), f);
+								Folha f4 = new Folha();
+								for (int y = 1; y < node.getChildNodes().size(); y++) {
+									Folha f3 = new Folha();
+									f.addFolha(f3);
+									gra.addlista(f3);
+									Folha folhaFlag = new Folha();
+									e1 = ExplorarBusca(node.getChildNodes().get(y).getChildNodes(), f3, gra, folhaFlag);
+									if (folhaFlag.getTexto() == null) {
+										f3.addFolha(f4);
+									} else {
+										if (folhaFlag.getTexto().contentEquals("return")) {
+										} else {
+											if (folhaFlag.getTexto().contentEquals("variavel")) {
+
+												gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+											} else {
+												if (e1.getTexto().contentEquals("vazio")) {
+													for (Folha no : BuscarPai(gra, e1)) {
+														no.addFolha(f4);
+														no.deletar(e1);
+													}
+													gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+												} else {
+													gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+												}
+											}
+										}
+									}
+								}
+								Ultimovalor.setTexto("switch");
+								f4.setTexto("vazio");
+								gra.addlista(f4);
+								f = f4;
+								pai = f;
+							}
 						}
 					}
 				}
@@ -547,6 +458,14 @@ public class Ast {
 	// Preenche o While
 	public void AddWhile(List<Node> list, Folha pai) {
 		pai.setTexto("while(" + list.get(0).toString() + ")");
+		Folha e = new Folha();
+		e.setTexto(list.get(0).toString());
+		pai.addMetodosInternos(e);
+	}
+
+	// Preenche o switch
+	public void AddSwitch(List<Node> list, Folha pai) {
+		pai.setTexto("switch(" + list.get(0).toString() + ")");
 		Folha e = new Folha();
 		e.setTexto(list.get(0).toString());
 		pai.addMetodosInternos(e);
