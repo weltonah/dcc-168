@@ -32,7 +32,8 @@ public class Ast {
 	// Cria o Grafo e preenche o NO Raiz
 	public Grafo criarGrafo() {
 		Grafo gra = null;
-		List<Node> listnoUm = ast.getChildNodes().get(0).getChildNodes().get(1).getChildNodes();
+		List<Node> listnoUm = ast.getChildNodes().get(ast.getChildNodes().size()-1).getChildNodes().get(1).getChildNodes();
+		
 		Folha e = new Folha();
 		String titulo = listnoUm.get(listnoUm.size() - 2) + " " + listnoUm.get(0) + " (";
 		if (listnoUm.size() > 3) {
@@ -41,10 +42,12 @@ public class Ast {
 				titulo = titulo + "," + listnoUm.get(i);
 			}
 		}
+		
 		titulo = titulo + ")";
 		e.setTexto(titulo);
-
+		e.setLinha(ast.getChildNodes().get(ast.getChildNodes().size()-1).getChildNodes().get(1).getBegin().get().line);
 		gra = new Grafo(e);
+		gra.setNomeMetodo(listnoUm.get(0).toString());
 		List<Node> list = listnoUm.get(listnoUm.size() - 1).getChildNodes();
 		BuscaProfundidade(list, gra.getRaiz(), gra);
 
@@ -74,17 +77,22 @@ public class Ast {
 			if (f == null)
 				f = new Folha();
 			Node node = list.get(i);
+
 			if (!node.toString().startsWith("if") && !node.toString().startsWith("for")
 					&& !node.toString().startsWith("while") && !node.toString().startsWith("switch")) {
 				f.setTexto(node.toString());
+
 				if (node.toString().startsWith("return")) {
 					if (list.size() == 1) {
+						pai.setLinha(node.getBegin().get().line);
 						pai.setTexto(node.toString());
 						pai.addFolha(gra.getFim());
 						Ultimovalor.setTexto("return");
 						return pai;
 					} else {
+
 						if (Ultimovalor.getTexto().contentEquals("variavel")) {
+							f.setLinha(node.getBegin().get().line);
 							pai.addFolha(f);
 							f.setTexto(node.toString());
 							f.addFolha(gra.getFim());
@@ -92,6 +100,7 @@ public class Ast {
 							Ultimovalor.setTexto("return");
 							return pai;
 						} else {
+							pai.setLinha(node.getBegin().get().line);
 							pai.setTexto(node.toString());
 							pai.addFolha(gra.getFim());
 							Ultimovalor.setTexto("return");
@@ -99,6 +108,8 @@ public class Ast {
 						}
 					}
 				} else {
+					if (!gra.getRaiz().equals(pai) && pai.getLinha()==-1)
+						pai.setLinha(node.getBegin().get().line);
 					if (!flag) {
 						pai.addMetodosInternos(f);
 						if (pai.getTexto() == null) {
@@ -129,6 +140,7 @@ public class Ast {
 						} else {
 						}
 					}
+					f.setLinha(node.getBegin().get().line);
 					AddIf(node.getChildNodes(), f);
 					Folha folhaFlag = new Folha();
 					Folha folhaFlag2 = new Folha();
@@ -236,6 +248,7 @@ public class Ast {
 								gra.addlista(f);
 							}
 						}
+						f.setLinha(node.getBegin().get().line);
 						AddWhile(node.getChildNodes(), f);
 						Folha f3 = new Folha();
 						f.addFolha(f3);
@@ -276,8 +289,9 @@ public class Ast {
 						if (node.toString().startsWith("for")) {
 							Folha DeclaracaoVariavel = new Folha();
 							DeclaracaoVariavel.setTexto(node.getChildNodes().get(0).toString());
-
+							
 							if (Ultimovalor.getTexto() == null) {
+								pai.setLinha(node.getBegin().get().line);
 								pai.setTexto(node.getChildNodes().get(0).toString());
 								pai.addMetodosInternos(DeclaracaoVariavel);
 								Folha f8 = new Folha();
@@ -290,6 +304,7 @@ public class Ast {
 									pai.addFolha(f);
 									gra.addlista(f);
 								} else {
+									pai.setLinha(node.getBegin().get().line);
 									pai.setTexto(node.getChildNodes().get(0).toString());
 									pai.addMetodosInternos(DeclaracaoVariavel);
 									Folha f8 = new Folha();
@@ -298,13 +313,16 @@ public class Ast {
 									gra.addlista(f);
 								}
 							}
+							f.setLinha(node.getBegin().get().line);
 							AddFor(node.getChildNodes(), f);
 							Folha DeclaracaoIncremento = new Folha();
 							DeclaracaoIncremento.setTexto(node.getChildNodes().get(2).toString());
+							DeclaracaoIncremento.setLinha(node.getChildNodes().get(2).getBegin().get().line);
 							Folha DeclaracaoInterna = new Folha();
 							f.addFolha(DeclaracaoInterna);
 							gra.addlista(DeclaracaoInterna);
 							Folha folhaFlag = new Folha();
+							DeclaracaoInterna.setLinha(node.getChildNodes().get(3).getBegin().get().line);
 							if (node.getChildNodes().get(3).getChildNodes().size() != 0)
 								e1 = ExplorarBusca(node.getChildNodes().get(3).getChildNodes(), DeclaracaoInterna, gra,
 										folhaFlag);
@@ -364,8 +382,9 @@ public class Ast {
 							Ultimovalor.setTexto("for");
 						} else {
 							if (node.toString().startsWith("switch")) {
-								for (Node n : node.getChildNodes())
-									System.out.println(n.toString() + " FILHOS SWITCH");
+
+								// for (Node n : node.getChildNodes())
+								// System.out.println(n.toString() + " FILHOS SWITCH");
 								// veio de variavel
 								if (Ultimovalor.getTexto() == null) {
 									f = pai;
@@ -375,6 +394,8 @@ public class Ast {
 										gra.addlista(f);
 									}
 								}
+
+								f.setLinha(node.getBegin().get().line);
 								AddSwitch(node.getChildNodes(), f);
 								Folha f4 = new Folha();
 								for (int y = 1; y < node.getChildNodes().size(); y++) {
@@ -437,7 +458,7 @@ public class Ast {
 	// Imprime o Grafo
 	public void imprimirGrafo(Grafo gra) {
 		for (Folha folhaaux : gra.GetHashMap()) {
-			System.out.println(folhaaux.getTexto() + "####");
+			System.out.println(folhaaux.getTexto() + "####    linha:" + folhaaux.getLinha());
 			for (Folha folhaaux2 : folhaaux.getFilhos()) {
 				System.out.println(folhaaux2.getTexto() + "$$$$$ 99999");
 			}

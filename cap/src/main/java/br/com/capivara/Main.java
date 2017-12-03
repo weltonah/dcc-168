@@ -1,21 +1,22 @@
 package br.com.capivara;
 
-import br.com.grafo.Folha;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 public class Main {
 	public static void main(String[] args) {
-		int b = 9;
-		for (int i = 0; i < 10; i++) {
-			if (b == 9) {
-				System.out.println("teste");
-				continue;
-			}
-			if (b >0) {
-				System.out.println("entrou");
-				continue;
-			}
-
-		}
+		
 
 	}
 

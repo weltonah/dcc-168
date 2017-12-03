@@ -6,11 +6,15 @@ public class Folha {
 	private String Texto;
 	private ArrayList<Folha> filhos;
 	private ArrayList<Folha> metodosInternos;
+	private boolean cobertura;
+	private int linha;
 	
 	public Folha() {
 		filhos = new ArrayList<Folha>();
 		metodosInternos = new ArrayList<Folha>();
 		Texto = null;
+		cobertura = false;
+		linha = -1;
 	}
 	
 	public String getTexto() {
@@ -36,6 +40,22 @@ public class Folha {
 	}
 	public ArrayList<Folha> getMetodosInternos() {
 		return metodosInternos;
+	}
+
+	public boolean isCobertura() {
+		return cobertura;
+	}
+
+	public void setCobertura(boolean cobertura) {
+		this.cobertura = cobertura;
+	}
+
+	public int getLinha() {
+		return linha;
+	}
+
+	public void setLinha(int linha) {
+		this.linha = linha;
 	}
 	
 }

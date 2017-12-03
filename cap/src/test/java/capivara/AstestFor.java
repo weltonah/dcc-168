@@ -9,7 +9,7 @@ import br.com.capivara.Ast;
 import br.com.grafo.Folha;
 import br.com.grafo.Grafo;
 
-public class AstestFor {
+public class AstestFor  {
 
 
 	final static String root = System.getProperty("user.dir")+"/src/main/resources/";

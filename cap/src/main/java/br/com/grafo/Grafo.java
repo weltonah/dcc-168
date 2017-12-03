@@ -10,11 +10,14 @@ public class Grafo {
 	private ArrayList<Folha> listaFolhas;
 	private Folha fim;
 	private Folha raiz;
+	private String nomeMetodo;
 	public Grafo(Folha e) {
 		//this.listaFolhas = new HashMap<Integer, Folha>();
 		this.listaFolhas = new ArrayList<Folha>();
 		this.raiz = e;
 		this.fim = new Folha();
+		this.raiz.setCobertura(true);
+		this.fim.setCobertura(true);
 		this.fim.setTexto("FIM");
 		//this.listaFolhas.put(cont, raiz);
 		this.listaFolhas.add(raiz);
@@ -52,6 +55,12 @@ public class Grafo {
 	}
 	public int buscaFolha(Folha e) {
 		return listaFolhas.indexOf(e);
+	}
+	public String getNomeMetodo() {
+		return nomeMetodo;
+	}
+	public void setNomeMetodo(String nomeMetodo) {
+		this.nomeMetodo = nomeMetodo;
 	}
 }
 
