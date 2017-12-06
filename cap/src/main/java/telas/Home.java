@@ -16,7 +16,7 @@ import br.com.capivara.Leitura;
 import br.com.grafo.Grafo;
 import br.com.image.CriarImagem;
 
-public class home {
+public class Home {
 
 	private JFrame frame;
 	private File fileJava;
@@ -30,7 +30,7 @@ public class home {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					home window = new home();
+					Home window = new Home();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,7 +42,7 @@ public class home {
 	/**
 	 * Create the application.
 	 */
-	public home() {
+	public Home() {
 		initialize();
 	}
 
@@ -65,7 +65,6 @@ public class home {
 				int result = fs.showSaveDialog(null);
 				if(result == JFileChooser.APPROVE_OPTION) {
 					fileJava  = fs.getSelectedFile();
-					System.out.println(fileJava.getPath());
 					Ast ast = new Ast(fileJava.getPath());
 					gra = ast.criarGrafo();
 				}
@@ -84,7 +83,6 @@ public class home {
 				int result2 = fs2.showSaveDialog(null);
 				if(result2 == JFileChooser.APPROVE_OPTION) {
 					fileTeste  = fs2.getSelectedFile();
-					System.out.println(fileJava.getPath());
 				}
 			}
 		});
@@ -114,7 +112,7 @@ public class home {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new CriarImagem(gra,false);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				frame.setSize(1400, 700);
 				frame.setVisible(true);
 			}
@@ -126,7 +124,7 @@ public class home {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new CriarImagem(gra,true);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				frame.setSize(1400, 700);
 				frame.setVisible(true);
 			}

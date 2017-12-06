@@ -1,4 +1,4 @@
-package capivara;
+package Ast;
 
 import static org.junit.Assert.assertEquals;
 

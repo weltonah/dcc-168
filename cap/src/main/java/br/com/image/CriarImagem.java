@@ -26,12 +26,7 @@ public class CriarImagem extends JFrame {
 		Object parent = graph.getDefaultParent();
 		graph.getModel().beginUpdate();
 		try {
-			for(Folha ff: gra.GetHashMap()) {
-				if(ff.isCobertura())
-				System.out.println(ff.getTexto());
-			}
 			Busca(graph, gra, parent,Cobertura);
-
 		} finally {
 			graph.getModel().endUpdate();
 		}
@@ -88,10 +83,8 @@ public class CriarImagem extends JFrame {
 					 v1 = graph.insertVertex(parent, null, texto, x, y, comprimento*6, largura*15, "fillColor=#e06666;fontColor=white");
 				}
 			}else {
-				
 				 v1 = graph.insertVertex(parent, null, texto, x, y, comprimento*6, largura*15);
 			}
-			
 
 			listaTodosNos.add(pai);
 			if (!(listaObject.size() == 0)) {
