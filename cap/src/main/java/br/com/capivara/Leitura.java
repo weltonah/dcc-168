@@ -16,15 +16,20 @@ import org.xml.sax.SAXException;
 import br.com.grafo.Grafo;
 
 public class Leitura {
+	// Função que transforma arquivo .Java em um Grafo
 	public Grafo leituraArvore(String caminho) {
 		Ast ast = new Ast(caminho);
 		Grafo gra = ast.criarGrafo();
 		return gra;
 	}
+	
+	
+	// Função que transforma uma File em um Document para ser manipulado por Xpath
 	public Document leituraXML(String caminho) {
 		File file = new File(caminho);
 		InputStream stream;
 		try {
+			// Metodo que transforma File em Document
 			stream = new FileInputStream(file);
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();

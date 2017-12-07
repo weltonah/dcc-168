@@ -55,6 +55,7 @@ public class Home {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		// Botão para selecionar Classe .Java que vai ser utilizada para teste
 		JButton btnNewButton = new JButton("Classe");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,31 +65,18 @@ public class Home {
 				fs.addChoosableFileFilter(new FileNameExtensionFilter("Java class File", "java"));
 				int result = fs.showSaveDialog(null);
 				if(result == JFileChooser.APPROVE_OPTION) {
+					//captura arquivo selecionado pelo usuario
 					fileJava  = fs.getSelectedFile();
-					Ast ast = new Ast(fileJava.getPath());
-					gra = ast.criarGrafo();
+					// Cria Grafo de fluxo de controle atravez de AST
+					Leitura lei = new Leitura();
+					gra = lei.leituraArvore(fileJava.getPath());
 				}
 			}
 		});
 		btnNewButton.setBounds(12, 28, 117, 25);
 		frame.getContentPane().add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Teste Junit");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fs2 = new JFileChooser(new File(""));
-				fs2.setDialogTitle("Abrir Classe");
-				fs2.setAcceptAllFileFilterUsed(false);
-				fs2.addChoosableFileFilter(new FileNameExtensionFilter("Java class File", "java"));
-				int result2 = fs2.showSaveDialog(null);
-				if(result2 == JFileChooser.APPROVE_OPTION) {
-					fileTeste  = fs2.getSelectedFile();
-				}
-			}
-		});
-		btnNewButton_1.setBounds(321, 28, 117, 25);
-		frame.getContentPane().add(btnNewButton_1);
-		
+		//Botão responsavel por escolher arquivo .XML
 		JButton btnSelecionarXml = new JButton("Xml");
 		btnSelecionarXml.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,7 +86,9 @@ public class Home {
 				fs3.addChoosableFileFilter(new FileNameExtensionFilter("XML File", "xml"));
 				int result3 = fs3.showSaveDialog(null);
 				if(result3 == JFileChooser.APPROVE_OPTION) {
+					//captura arquivo selecionado pelo usuario
 					fileXml  = fs3.getSelectedFile();
+					//Colore estrutura do Grafo
 					Colorir color = new Colorir();
 					Leitura lei = new Leitura();
 					color.ColorirGrafo(lei.leituraXML(fileXml.getPath()), gra, fileJava.getName());
@@ -108,9 +98,11 @@ public class Home {
 		btnSelecionarXml.setBounds(161, 28, 117, 25);
 		frame.getContentPane().add(btnSelecionarXml);
 		
+		//Botão responsavel pela vizualização do Grafo sem estar colorido
 		JButton btnNewButton_2 = new JButton("Vizualizar Grafo");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Cria tela com a imagem do grafo
 				JFrame frame = new CriarImagem(gra,false);
 				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				frame.setSize(1400, 700);
@@ -119,10 +111,11 @@ public class Home {
 		});
 		btnNewButton_2.setBounds(161, 162, 213, 25);
 		frame.getContentPane().add(btnNewButton_2);
-		
+		//Botão responsavel pela vizualização do Grafo colorido
 		JButton btnNewButton_3 = new JButton("Vizualizar Grafo Coberto");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Crita Tela com imagem do grafo colorido
 				JFrame frame = new CriarImagem(gra,true);
 				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				frame.setSize(1400, 700);

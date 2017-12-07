@@ -11,12 +11,16 @@ import br.com.grafo.Folha;
 import br.com.grafo.Grafo;
 
 public class Colorir {
+	
+	// Metodo que colore os nos do Grafo
 	public void ColorirGrafo(Document doc, Grafo gra, String NomeClasse) {
 		BuscaXml bus = new BuscaXml();
 		try {
+			//Busca um Array onde possui as linhas cobertas do grafo
 			ArrayList<Cobertura> listaColorir = bus.LinhasCobertas(doc, NomeClasse);
 			System.out.println(listaColorir.size());
 			ArrayList<Folha> listaFolhas = gra.GetHashMap();
+			//percorre o grafo colorindo as Folhas Cobertas
 			for(Folha f : listaFolhas) {
 				for(Cobertura cob : listaColorir) {
 					if(cob.getNr() == f.getLinha() && cob.getCi()>0) {

@@ -1,7 +1,5 @@
 package Ast;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -20,13 +18,17 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import br.com.capivara.Ast;
 import br.com.capivara.BuscaXml;
+import br.com.capivara.Colorir;
 import br.com.grafo.Cobertura;
+import br.com.grafo.Grafo;
 
-public class BuscaXmlTest {
-	private static ArrayList<Cobertura> lista;
+public class teste {
+
 	final static String root = System.getProperty("user.dir")+"/src/main/resources/";
-	
+	private static Ast ast;
+	private static Grafo graf;
 	@Before
 	public void test() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 		BuscaXml bus = new BuscaXml();
@@ -37,39 +39,17 @@ public class BuscaXmlTest {
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		Document document = docBuilder.parse(stream);
-		lista = bus.LinhasCobertas(document, "mult.java");
+		String caminho = root+"mult.java";
+		ast = new Ast(caminho);
+		graf = ast.criarGrafo();
+		
+		Colorir col = new Colorir();
+		col.ColorirGrafo(document, graf, "mult.java");
+		
 	}
 	@Test
 	public void linhas1() {
-		assertTrue(lista.get(0).getCi()>0);
-	}
-	@Test
-	public void linhas2() {
-		assertTrue(lista.get(1).getCi()>0);
-	}
-	@Test
-	public void linhas3() {
-		assertTrue(lista.get(2).getCi()>0);
-	}
-	@Test
-	public void linhas4() {
-		assertTrue(lista.get(3).getCi()>0);
-	}
-	@Test
-	public void linhas5() {
-		assertTrue(lista.get(4).getCi()>0);
-	}
-	@Test
-	public void linhas6() {
-		assertTrue(lista.get(5).getCi()==0);
-	}
-	@Test
-	public void linhas7() {
-		assertTrue(lista.get(6).getCi()>0);
-	}
-	@Test
-	public void linhas8() {
-		assertTrue(lista.get(7).getCi()>0);
+		assertTrue(graf.getFolha(1).isCobertura());
 	}
 
 }
