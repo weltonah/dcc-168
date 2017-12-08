@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -15,13 +15,13 @@ import br.com.grafo.Grafo;
 public class LeituraTest {
 
 	final static String root = System.getProperty("user.dir")+"/src/main/resources/";
-	private Grafo grafo;
-	private Leitura leitura;
-	private Document doc;
-	String caminhoJava,caminhoXML;
+	private static Grafo grafo;
+	private static Leitura leitura;
+	private static Document doc;
+	private static String  caminhoJava,caminhoXML;
 
-	@Before
-	public void beforeTeste() {
+	@BeforeClass
+	public static void beforeTeste() {
 		leitura = new Leitura();		
 		caminhoJava = root+"testeFor.java";
 		caminhoXML = root+"Mult.xml";
@@ -42,7 +42,7 @@ public class LeituraTest {
 	
 	@Test
 	public void testLeituraXMLNotExist() {
-		doc = leitura.leituraXML(root+"Multi.xml");
+		doc = leitura.leituraXML(root+"Mult.xml");
 		assertNull(doc);
 	}
 		

@@ -11,21 +11,29 @@ import br.com.grafo.Folha;
 import br.com.grafo.Grafo;
 
 public class Colorir {
-	
+
 	// Metodo que colore os nos do Grafo
 	public void ColorirGrafo(Document doc, Grafo gra, String NomeClasse) {
 		BuscaXml bus = new BuscaXml();
 		try {
-			//Busca um Array onde possui as linhas cobertas do grafo
+			// Busca um Array onde possui as linhas cobertas do grafo
 			ArrayList<Cobertura> listaColorir = bus.LinhasCobertas(doc, NomeClasse);
 			System.out.println(listaColorir.size());
 			ArrayList<Folha> listaFolhas = gra.GetHashMap();
-			//percorre o grafo colorindo as Folhas Cobertas
-			for(Folha f : listaFolhas) {
-				for(Cobertura cob : listaColorir) {
-					if(cob.getNr() == f.getLinha() && cob.getCi()>0) {
+			// percorre o grafo colorindo as Folhas Cobertas
+			for (Cobertura cob : listaColorir) {
+				for (Folha f : listaFolhas) {
+					if ((cob.getNr() == f.getLinha()) && cob.getCi() > 0) {
 						f.setCobertura(true);
+					} else {
+						for (Folha aux : f.getMetodosInternos()) {
+							if ((cob.getNr() == aux.getLinha()) && cob.getCi() > 0) {
+								f.setCobertura(true);
+							}
+						}
+
 					}
+
 				}
 			}
 		} catch (XPathExpressionException e) {

@@ -111,9 +111,10 @@ public class Ast {
 						}
 					}
 				} else {
+					
 					if ((node.toString().startsWith("break") || node.toString().startsWith("continue"))
-							&& ContBreak != null) {
-						System.out.println("TESTESTRE" + node.toString() + "Linha: " + node.getBegin().get().line);
+							&& (ContBreak !=null)) {
+						System.out.println("entrou");
 						if (list.size() == 1) {
 							pai.setLinha(node.getBegin().get().line);
 							pai.setTexto(node.toString());
@@ -226,6 +227,7 @@ public class Ast {
 									} else {
 										if (!folhaFlag.getTexto().contentEquals("ContBreak"))
 											gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
+										
 									}
 								}
 							}
@@ -262,6 +264,7 @@ public class Ast {
 									} else {
 										if (!folhaFlag.getTexto().contentEquals("ContBreak"))
 											gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+										
 									}
 								}
 							}
@@ -292,6 +295,7 @@ public class Ast {
 						gra.addlista(f3);
 						Folha folhaFlag = new Folha();
 						List<Folha> listContBreak = new ArrayList<Folha>();
+						
 						if (node.getChildNodes().get(1).getChildNodes().size() != 0) {
 							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag,
 									listContBreak);
@@ -320,6 +324,7 @@ public class Ast {
 							}
 						}
 						Folha f4 = new Folha();
+						System.out.println(listContBreak.size());
 						for (Folha y : listContBreak) {
 							if (y.getTexto().contentEquals("continue;")) {
 								y.addFolha(f);
@@ -374,9 +379,11 @@ public class Ast {
 							Folha folhaFlag = new Folha();
 							DeclaracaoInterna.setLinha(node.getChildNodes().get(3).getBegin().get().line);
 							List<Folha> listContBreak = new ArrayList<Folha>();
+							
 							if (node.getChildNodes().get(3).getChildNodes().size() != 0)
 								e1 = ExplorarBusca(node.getChildNodes().get(3).getChildNodes(), DeclaracaoInterna, gra,
 										folhaFlag, listContBreak);
+						
 
 							if (folhaFlag.getTexto() == null) {
 								f.deletar(DeclaracaoInterna);
@@ -438,7 +445,6 @@ public class Ast {
 														gra.getFolha(gra.buscaFolha(e1)).addFolha(DeclaracaoIncremento);
 														gra.addlista(DeclaracaoIncremento);
 													}
-
 												} else {
 													gra.addlista(DeclaracaoIncremento);
 												}
@@ -449,6 +455,7 @@ public class Ast {
 								}
 							}
 							Folha f4 = new Folha();
+							System.out.println(listContBreak.size());
 							for (Folha y : listContBreak) {
 								if (y.getTexto().contentEquals("continue;")) {
 									y.addFolha(DeclaracaoIncremento);
