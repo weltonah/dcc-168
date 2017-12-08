@@ -24,21 +24,20 @@ public class TesteColorirCalculadora {
 			if(num2 == 0) {
 				return 0;
 			}
-			else
-				return num1/num2;			
+			else {
+				return num1/num2;	
+			}
 			
 			
 		case '^':
 			float aux2 = num1;
 			for(int j = 1 ; j < num2 ; j++) {
 				aux2 = aux2 * num1;
-				
 			}
 			return aux2;
-			
-		
-			default:
+		default:
 				return 0;
 		}
+		
 	}
 }

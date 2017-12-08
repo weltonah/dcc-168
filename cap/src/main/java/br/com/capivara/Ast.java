@@ -111,10 +111,8 @@ public class Ast {
 						}
 					}
 				} else {
-					
 					if ((node.toString().startsWith("break") || node.toString().startsWith("continue"))
-							&& (ContBreak !=null)) {
-						System.out.println("entrou");
+							&& (ContBreak != null)) {
 						if (list.size() == 1) {
 							pai.setLinha(node.getBegin().get().line);
 							pai.setTexto(node.toString());
@@ -142,12 +140,14 @@ public class Ast {
 						if (!gra.getRaiz().equals(pai) && pai.getLinha() == -1)
 							pai.setLinha(node.getBegin().get().line);
 						if (!flag) {
+							f.setLinha(node.getBegin().get().line);
 							pai.addMetodosInternos(f);
 							if (pai.getTexto() == null) {
 								pai.setTexto(node.toString());
 							}
 							f = pai;
 						} else {
+							f.setLinha(node.getBegin().get().line);
 							pai = f;
 							if (!gra.GetHashMap().contains(pai))
 								gra.addlista(pai);
@@ -186,6 +186,7 @@ public class Ast {
 						if (node.getChildNodes().get(1).getChildNodes().size() != 0)
 							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f1, gra, folhaFlag,
 									ContBreak);
+
 						Folha f4 = new Folha();
 						if (folhaFlag.getTexto() == null) {
 							f1.addFolha(f4);
@@ -193,18 +194,23 @@ public class Ast {
 							if (folhaFlag.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
 							} else {
-								if (e1.getTexto().contentEquals("vazio")) {
-									for (Folha no : BuscarPai(gra, e1)) {
-										no.addFolha(f4);
-										no.deletar(e1);
-									}
-									gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+								if (folhaFlag.getTexto().contentEquals("return")) {
+
 								} else {
-									if (!folhaFlag.getTexto().contentEquals("ContBreak"))
-										gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+									if (e1.getTexto().contentEquals("vazio")) {
+										for (Folha no : BuscarPai(gra, e1)) {
+											no.addFolha(f4);
+											no.deletar(e1);
+										}
+										gra.deletar(gra.getFolha(gra.buscaFolha(e1)));
+									} else {
+										if (!folhaFlag.getTexto().contentEquals("ContBreak"))
+											gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
+									}
 								}
 							}
 						}
+
 						if (node.getChildNodes().get(2).getChildNodes().size() != 0)
 							e2 = ExplorarBusca(node.getChildNodes().get(2).getChildNodes(), f2, gra, folhaFlag2,
 									ContBreak);
@@ -215,7 +221,7 @@ public class Ast {
 							if (folhaFlag2.getTexto().contentEquals("variavel")) {
 								gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
 							} else {
-								if (folhaFlag.getTexto().contentEquals("return")) {
+								if (folhaFlag2.getTexto().contentEquals("return")) {
 
 								} else {
 									if (e2.getTexto().contentEquals("vazio")) {
@@ -225,9 +231,9 @@ public class Ast {
 										}
 										gra.deletar(gra.getFolha(gra.buscaFolha(e2)));
 									} else {
-										if (!folhaFlag.getTexto().contentEquals("ContBreak"))
+										if (!folhaFlag2.getTexto().contentEquals("ContBreak"))
 											gra.getFolha(gra.buscaFolha(e2)).addFolha(f4);
-										
+
 									}
 								}
 							}
@@ -264,7 +270,7 @@ public class Ast {
 									} else {
 										if (!folhaFlag.getTexto().contentEquals("ContBreak"))
 											gra.getFolha(gra.buscaFolha(e1)).addFolha(f4);
-										
+
 									}
 								}
 							}
@@ -295,7 +301,7 @@ public class Ast {
 						gra.addlista(f3);
 						Folha folhaFlag = new Folha();
 						List<Folha> listContBreak = new ArrayList<Folha>();
-						
+
 						if (node.getChildNodes().get(1).getChildNodes().size() != 0) {
 							e1 = ExplorarBusca(node.getChildNodes().get(1).getChildNodes(), f3, gra, folhaFlag,
 									listContBreak);
@@ -324,7 +330,6 @@ public class Ast {
 							}
 						}
 						Folha f4 = new Folha();
-						System.out.println(listContBreak.size());
 						for (Folha y : listContBreak) {
 							if (y.getTexto().contentEquals("continue;")) {
 								y.addFolha(f);
@@ -379,11 +384,10 @@ public class Ast {
 							Folha folhaFlag = new Folha();
 							DeclaracaoInterna.setLinha(node.getChildNodes().get(3).getBegin().get().line);
 							List<Folha> listContBreak = new ArrayList<Folha>();
-							
+
 							if (node.getChildNodes().get(3).getChildNodes().size() != 0)
 								e1 = ExplorarBusca(node.getChildNodes().get(3).getChildNodes(), DeclaracaoInterna, gra,
 										folhaFlag, listContBreak);
-						
 
 							if (folhaFlag.getTexto() == null) {
 								f.deletar(DeclaracaoInterna);
@@ -455,7 +459,6 @@ public class Ast {
 								}
 							}
 							Folha f4 = new Folha();
-							System.out.println(listContBreak.size());
 							for (Folha y : listContBreak) {
 								if (y.getTexto().contentEquals("continue;")) {
 									y.addFolha(DeclaracaoIncremento);

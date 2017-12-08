@@ -16,14 +16,16 @@ public class Main {
 			break;
 		case 3:
 			while (b < 7) {
-				if (b == 5)
+				if (b == 5) {
 					break;
+				}
 				b++;
 			}
 		case 4:
 			for (int i = 0; i < 10; i++) {
-				if (i == 12)
+				if (i == 12) {
 					break;
+				}
 				c = c + i;
 			}
 		}

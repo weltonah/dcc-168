@@ -18,7 +18,6 @@ public class Colorir {
 		try {
 			// Busca um Array onde possui as linhas cobertas do grafo
 			ArrayList<Cobertura> listaColorir = bus.LinhasCobertas(doc, NomeClasse);
-			System.out.println(listaColorir.size());
 			ArrayList<Folha> listaFolhas = gra.GetHashMap();
 			// percorre o grafo colorindo as Folhas Cobertas
 			for (Cobertura cob : listaColorir) {

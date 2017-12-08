@@ -99,7 +99,7 @@ public class Home {
 		frame.getContentPane().add(btnSelecionarXml);
 		
 		//Botão responsavel pela vizualização do Grafo sem estar colorido
-		JButton btnNewButton_2 = new JButton("Vizualizar Grafo");
+		JButton btnNewButton_2 = new JButton("visualizar Grafo");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Cria tela com a imagem do grafo
@@ -112,7 +112,7 @@ public class Home {
 		btnNewButton_2.setBounds(161, 162, 213, 25);
 		frame.getContentPane().add(btnNewButton_2);
 		//Botão responsavel pela vizualização do Grafo colorido
-		JButton btnNewButton_3 = new JButton("Vizualizar Grafo Coberto");
+		JButton btnNewButton_3 = new JButton("visualizar Grafo Coberto");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Crita Tela com imagem do grafo colorido
